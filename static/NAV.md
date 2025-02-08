@@ -1,0 +1,3 @@
+- [home](/)
+- [projects](/projects/README.md)
+- [whoami](/whoami/README.md)
