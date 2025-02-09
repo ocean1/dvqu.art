@@ -22,12 +22,14 @@ const renderer = {
     return `<a name="${escapedText}" href="#${href}">${text}</a>`;
   },
   image({href, title, text}) {
+
     title = title || text;
     const hash = window.location.hash.slice(1, window.location.hash.length);
     base = hash.split('/');
     base = base.slice(0, base.length-1).join('/');
     href = `${base}/${href}`;
-    return `<figure><img src="${href}" alt="${title}" /><figcaption>${text}</figcaption></figure>`
+    res = `<figure><img src="${href}" alt="${title}"/><figcaption>${text}</figcaption></figure>`;
+    return res;
   }
 
 };

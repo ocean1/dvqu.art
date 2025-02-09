@@ -1617,9 +1617,9 @@ className:"meta",begin:/^[\t ]*@/,end:/(?=#)|$/,contains:[g,m,b]}]}}})()
   }
 
   img {
-    min-width: 10%;
-    width: 100%;
-    height: 100%;
+    min-width: 5%;
+    max-width: 100%;
+    max-height: 100%;
   }
 </style><script type="text/javascript">/**
  * marked v15.0.6 - a markdown parser
@@ -1651,12 +1651,14 @@ const renderer = {
     return `<a name="${escapedText}" href="#${href}">${text}</a>`;
   },
   image({href, title, text}) {
+
     title = title || text;
     const hash = window.location.hash.slice(1, window.location.hash.length);
     base = hash.split('/');
     base = base.slice(0, base.length-1).join('/');
     href = `${base}/${href}`;
-    return `<figure><img src="${href}" alt="${title}" /><figcaption>${text}</figcaption></figure>`
+    res = `<figure><img src="${href}" alt="${title}"/><figcaption>${text}</figcaption></figure>`;
+    return res;
   }
 
 };
@@ -1730,7 +1732,7 @@ if (document.addEventListener) {
 <div class="logo">
 <span class="gspace">&nbsp;</span>░▒▓██████▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓██████▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓████████▓▒░<span class="gspace">&nbsp;</span>░▒▓██████▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓███████▓▒░<span class="gspace">&nbsp;</span><br/>░▒▓█▓▒░░▒▓█▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░<br/>░▒▓█▓▒░░▒▓█▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓█▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░<br/>░▒▓█▓▒░░▒▓█▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓██████▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓████████▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░<br/>░▒▓█▓▒░░▒▓█▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓█▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░<br/>░▒▓█▓▒░░▒▓█▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░<br/><span class="gspace">&nbsp;</span>░▒▓██████▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓██████▓▒░<span class="gspace">&nbsp;</span><span class="gspace">&nbsp;</span>░▒▓████████▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░<span class="gspace">&nbsp;</span>░▒▓█▓▒░░▒▓█▓▒░</div>
 <div class="nav center">
-<div id="acbe3d27-158f-4981-b563-8f11ecbbe4d6"></div><script>document.addEventListener("DOMContentLoaded", function(event) {renderEl("acbe3d27-158f-4981-b563-8f11ecbbe4d6",`- [home](/)
+<div id="a74995b4-8963-419e-886a-ba555b993cdd"></div><script>document.addEventListener("DOMContentLoaded", function(event) {renderEl("a74995b4-8963-419e-886a-ba555b993cdd",`- [home](/)
 - [projects](/projects/README.md)
 - [whoami](/whoami/README.md)`);});</script></div>
 </div>

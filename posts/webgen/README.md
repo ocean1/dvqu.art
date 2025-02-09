@@ -5,11 +5,17 @@ With a relaxing weekend and a bunch of hours to freely nerd at hand, my mind wan
 
 Aside from the general feeling of my personal website that I wanted to change, there was something haunting me: dependancies.
 I seldom update my website, and having to recall commands, or worse having to fix broken dependancies is enough to drain the last bits of will I could have to update my personal website.
-The other thing that made me despise updating my website was the 
+Having to juggle between npm, python, pandoc, haskell and whatnot to be able to push a simple post is *unacceptable*.
+
+![Unacceptable](unacceptable-adventure-time.gif)
 
 > Thou shalt not have dependencies outside of Bash, GNU utils, and Python with standard library.
 
 For convenience, a Makefile is allowed too ;p.
+
+The other thing that made me despise updating my website was being tied to the workflow that static website generators end up
+
+
 
 ``` python
 class CustomFileProcessor(FileProcessor):
@@ -27,7 +33,7 @@ class CustomFileProcessor(FileProcessor):
                     '<span class="gspace">&nbsp;</span>'
                 ).replace("\n", "<br/>") for l in f.readlines()
             ]
-        
+
         return ''.join(lines)
 ```
 
