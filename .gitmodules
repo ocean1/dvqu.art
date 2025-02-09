@@ -1,0 +1,3 @@
+[submodule "mwg"]
+	path = mwg
+	url = https://github.com/ocean1/mwg
