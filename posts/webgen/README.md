@@ -22,6 +22,7 @@ I was tempted by this idea, and to simplify things further, at this point, I wan
 Fortunately [marked](https://marked.js.org/) is a simple js library that can allow us to do that, and extend it where we need.
 
 > Thou shalt not have dependencies outside of Bash, GNU utils, and Python with standard library.
+
 For convenience, a Makefile is allowed too ;p.
 
 I started implementing a minimal generator, but just to keep things tidy, and be able to merge various sources in the single index file.
