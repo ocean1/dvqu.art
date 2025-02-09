@@ -33,7 +33,7 @@ I started implementing a minimal generator, but just to keep things tidy, and be
 ```
 
 Something like this, can be easily parsed in python with a regex, so that's almost as much as we need from our web generator,
-just need to take care we can process different file types in a different way.
+just need to make sure we can process different file types in a different way.
 
 ``` python
     def process_md(self):
