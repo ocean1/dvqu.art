@@ -75,7 +75,7 @@ class MicroWebGen:
     OUTPUT = 'index.html'
     EXCLUDES = ['mwg/', ]
 
-    def __init__(self, template=TEMPLATE, output=OUTPUT, excludes:list=[], scan_interval=1):
+    def __init__(self, template=TEMPLATE, output=OUTPUT, excludes:list=[], scan_interval=1, file_processor=FileProcessor):
         self._template = template
         self._output = output
         self._template_file = None
@@ -84,6 +84,7 @@ class MicroWebGen:
         self.exclude.extend(MicroWebGen.EXCLUDES)
         self.exclude.append(output)
         self.scan_interval = scan_interval
+        self.file_processor = FileProcessor
     
     @property
     def template(self):
@@ -108,16 +109,17 @@ class MicroWebGen:
             self._output_file.close()
             self._output_file = None
 
+    def process_include(self, file):
+        return self.file_processor(file).process()
+
     def build(self):
         tlines = self.template.readlines()
 
         for i,l in zip(range(len(tlines)), tlines):
             m = include_re.match(l)
             if m:
-                #print(m)
-                #print(m.groups())
                 include_file = m.groups()[-1]
-                tlines[i] = FileProcessor(include_file).process()
+                tlines[i] = self.process_include(include_file)
 
         self.output.writelines(tlines)
 
