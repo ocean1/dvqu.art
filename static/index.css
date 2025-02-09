@@ -1,5 +1,5 @@
   html {
-    min-width: 480px;
+    min-width: 400px;
   }
 
   body {
@@ -106,7 +106,6 @@
     background-color: rgb(26, 26, 26);
     animation: textShadow 1.6s infinite;
     width: 100%;
-    min-width: 460px;
   }
 
   .content {
