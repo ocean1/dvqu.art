@@ -186,7 +186,7 @@
 
   .gspace {
     display: inline-block;
-    animation: glitchSpace 0.005s 1;
+    animation: glitchSpace 0.05s 2;
   }
 
 
