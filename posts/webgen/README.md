@@ -7,8 +7,9 @@ Aside from the general look and feel of my personal website that I wanted to cha
 I seldom update my website, and having to recall commands, or worse having to fix broken dependancies is enough to drain the last bits of will I could have to update my personal website.
 Having to juggle between npm, python, pandoc, haskell and whatnot to be able to push a simple post is *unacceptable*.
 
-The other thing that made me despise updating my website was being tied to the workflow that static website generators that
-generate html files starting from markdown. This way, you either use the github functionality where you put the static site under the `docs` folder, or you have to resort to a workflow, local, or with github actions, to push the generated site to pages, while keeping the sources somewhere else.
+The other thing that made me despise updating my website was being tied to the workflows implictly (and explicitly) forced on me by  static website generators.
+Again, a plethora of dependencies and commands to remember, or configuration files, just to write a post, build the site, and deploy.
+On top, usually static web generators create one html page for each "source" file, this way, for deploying the site you either have to keep the sources and generated files together, and use the github functionality where you put the static site under the `docs` folder, or you have to resort to a more complex workflow, local, or with github actions, that will push the generated site to github pages, while keeping the sources somewhere else.
 Then you end up with multiple branches or repos just to manage an extremely small and simple website.
 
 ![Too many dependencies, too many workflow steps.](unacceptable-adventure-time.gif)
