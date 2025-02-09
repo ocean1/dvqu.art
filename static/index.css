@@ -216,12 +216,13 @@
     text-indent: 0;
     border: thin silver solid;
     padding: 0.5em;
-    display: block;
+    display: inline-block;
     margin-left: auto;
     margin-right: auto;
-    width: auto;
-    height: auto;
+    /*width: auto;
+    height: auto;*/
     max-width: 50%;
+    min-width: 280px;
   }
 
   img {
