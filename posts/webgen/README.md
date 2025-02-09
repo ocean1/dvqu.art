@@ -46,7 +46,7 @@ just need to make sure we can process different file types in a different way.
 ```
 
 
-## A Single Page to Render them all
+## A Single Page to Render Them All
 
 Changing the path parameters will result in the page reloading, which is quite annoying since we have a single page and the loading happens dynamically,
 using URIs will also mean that if a user copy-paste a link will end up on the markdown file, instead of the page that renders it.
