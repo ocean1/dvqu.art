@@ -121,7 +121,7 @@ The only thing missing is making sure that we render links properly putting the 
 ```
 
 At this point the click event listener is probably redundant, but I'll clean up the code another day.
-External links are also put in the hash, so that's something still to solve.
+External links are also put in the hash, so we need to take care of that and bubble the click event if an external link is detected, for now I implemented a quick and dirty solution there, but we could make it much more reliable.
 
 For code highlighting integrating `highlight.js` is a breeze.
 A few touches here and there to get some elements such as blockquotes and figures to play nice, and the page is done.
@@ -175,7 +175,7 @@ For good measure, let's sprinkle a bit of [CRT effect](https://dev.to/ekeijl/ret
 ## Conclusion
 
 I wanted to do a quick test post, if you got to the end, feel also free to fork the [website](https://github.com/ocean1/dvqu.art) or the [micro web generator](https://github.com/ocean1/mwg) and open pull requests.
-For the next steps, I guess I'll be fixing the issue with links... :P and probably add a minimal site template to the generator, and documentation.
+For the next steps, I guess I'll probably add a minimal site template to the generator, and documentation. Other than that, we should be able to handle actual anchor hashes.
 
 There's also some things I'd like to explore such as adding a table of content to post pages, and maybe a search functionality.
 Perhaps I might explore these ideas in future posts.

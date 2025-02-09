@@ -19,6 +19,9 @@ const renderer = {
   link({tokens, href}) {
     const text = this.parser.parseInline(tokens);
     const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
+    if (href.startsWith('http') || href.startsWith('www')) {
+      return `<a name="${escapedText}" href="${href}">${text}</a>`;
+    }
     return `<a name="${escapedText}" href="#${href}">${text}</a>`;
   },
   image({href, title, text}) {
@@ -67,6 +70,10 @@ function click_callback(e) {
 
   if (e.target.tagName !== 'A')
       return;
+
+  if (e.target.href.startsWith('http') || e.target.href.startsWith('www')) {
+    return;
+  }
 
   uri_components = e.target.href.split("#");
   if (uri_components[1] == "/"){
