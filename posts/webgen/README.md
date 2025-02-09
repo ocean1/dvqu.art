@@ -10,3 +10,8 @@ The other thing that made me despise updating my website was the
 > Thou shalt not have dependencies outside of Bash, GNU utils, and Python with standard library.
 
 For convenience, a Makefile is allowed too ;p.
+
+
+## Bonus glitchy logo
+
+![Glitchy Logo](logo_glitch.gif)

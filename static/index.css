@@ -17,6 +17,7 @@
   .logo {
     font-size: 1em;
     font-size: 1vw;
+    min-width: 300px;
   }
 
   h1 {
@@ -106,6 +107,7 @@
     background-color: rgb(26, 26, 26);
     animation: textShadow 1.6s infinite;
     width: 100%;
+    min-width: 300px;
   }
 
   .content {
@@ -176,6 +178,19 @@
     color: darksalmon;
   }
 
+  @keyframes glitchSpace {
+    0%   { font-size: 1em;   }
+    95%  { font-size: 0.3em; }
+    100% { font-size: 0.1em; }
+  }
+
+  .gspace {
+    display: inline-block;
+    animation: glitchSpace 0.005s 1;
+  }
+
+
+
   blockquote {
     background: #494949;
     border-left: 10px solid #ccc;
@@ -192,4 +207,25 @@
   }
   blockquote p {
     display: inline;
+  }
+
+  figure {
+    text-align: center;
+    font-style: italic;
+    font-size: smaller;
+    text-indent: 0;
+    border: thin silver solid;
+    padding: 0.5em;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+    height: auto;
+    max-width: 50%;
+  }
+
+  img {
+    min-width: 10%;
+    width: 100%;
+    height: 100%;
   }
