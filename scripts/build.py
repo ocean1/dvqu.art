@@ -90,13 +90,17 @@ def watch(targets, callback):
     old_targets = scan_targets()
     #print(old_targets)
     while(True):
-        new_targets = scan_targets()
-        if new_targets != old_targets:
-            old_targets = new_targets
-            print("[!] REBUILDING")
-            callback()
+        try:
+            new_targets = scan_targets()
+            if new_targets != old_targets:
+                old_targets = new_targets
+                print("[!] REBUILDING")
+                callback()
 
-        sleep(0.8)
+            sleep(1)
+        except KeyboardInterrupt:
+            print("[!] DONE")
+            break
 
 
 if __name__ == "__main__":
