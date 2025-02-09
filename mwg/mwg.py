@@ -45,7 +45,7 @@ class FileProcessor:
     def process_txt(self):
         lines = None
         with open(self.fname, 'r') as f:
-            lines = [l.replace(' ', '<span class="gspace">&nbsp;</span>').replace("\n", "<br/>") for l in f.readlines()]
+            lines = [l.replace(' ', '&nbsp;').replace("\n", "<br/>") for l in f.readlines()]
         
         return ''.join(lines)
     
@@ -84,7 +84,7 @@ class MicroWebGen:
         self.exclude.extend(MicroWebGen.EXCLUDES)
         self.exclude.append(output)
         self.scan_interval = scan_interval
-        self.file_processor = FileProcessor
+        self.file_processor = file_processor
     
     @property
     def template(self):

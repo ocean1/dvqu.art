@@ -1,3 +1,3 @@
-from .mwg import MicroWebGen
+from .mwg import MicroWebGen, FileProcessor
 
-__all__ = ['MicroWebGen',]
+__all__ = ['MicroWebGen', 'FileProcessor']
