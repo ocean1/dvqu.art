@@ -17,9 +17,9 @@ Then you end up with multiple branches or repos just to manage an extremely smal
 ## The Micro Web Generator
 
 What if we could just write a Markdown file, push it, and that's it? No compilation, no dependency hell, no messy multi-step workflows.
-Fortunately [marked](https://marked.js.org/) is a simple js library that can allow us to do that, and extend it where we need.
 
 I was tempted by this idea, and to simplify things further, at this point, I wanted the website to be a single html page that would load dynamically the markdown files.
+Fortunately [marked](https://marked.js.org/) is a simple js library that can allow us to do that, and extend it where we need.
 
 > Thou shalt not have dependencies outside of Bash, GNU utils, and Python with standard library.
 For convenience, a Makefile is allowed too ;p.
