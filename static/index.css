@@ -1,11 +1,33 @@
+  html {
+    min-width: 480px;
+  }
+
   body {
     background-color: rgb(26, 26, 26);
     color:floralwhite;
     font-family: "Fira Code", serif;
+    width: 100%;
   }
 
   .center {
       text-align: center;
+  }
+
+  .logo {
+    font-size: 1em;
+    font-size: 1vw;
+  }
+
+  h1 {
+    font-size: 1.2em;
+  }
+
+  h2 {
+    font-size: 1em;
+  }
+
+  h3 {
+    font-size: 0.8em;
   }
 
   @keyframes textShadow {
@@ -77,10 +99,13 @@
   .head {
     padding-top: 3em;
     position: sticky;
+    display: inline-block;
     top: 0;
     z-index: 999;
     background-color: rgb(26, 26, 26);
     animation: textShadow 1.6s infinite;
+    width: 100%;
+    min-width: 480px;
   }
 
   .content {
@@ -97,6 +122,11 @@
 
   .nav ul {
     list-style-type: none;
+    padding-inline-start: 0px;
+    margin-block-start: 1em;
+    margin-block-start: 1vw;
+    margin-block-end: 1em;
+    margin-block-end: 1vw;
   }
 
   .nav ul li {
