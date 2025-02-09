@@ -1,3 +1,4 @@
+
 // Custom renderer for links and headings 
 const renderer = {
   heading({ tokens, depth }) {
@@ -31,10 +32,20 @@ const renderer = {
 
 };
 
+const marked_highlight = markedHighlight.markedHighlight({
+    emptyLangClass: 'hljs',
+    langPrefix: 'hljs language-',
+    highlight(code, lang, info) {
+      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+      return hljs.highlight(code, { language }).value;
+    }
+  });
 
 function renderEl(elid, content){
+  marked.use({ marked_highlight });
   marked.use({ renderer });
   document.getElementById(elid).innerHTML = marked.parse(content);
+  hljs.highlightAll();
 }
 
 function renderFi(target){

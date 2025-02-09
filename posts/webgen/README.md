@@ -11,6 +11,25 @@ The other thing that made me despise updating my website was the
 
 For convenience, a Makefile is allowed too ;p.
 
+``` python
+class CustomFileProcessor(FileProcessor):
+
+    def __init__(self, fname, ftype = ""):
+        custom_processors = {'ascii': self.process_ascii}
+        super().__init__(fname, ftype, custom_processors=custom_processors)
+
+    def process_ascii(self):
+        lines = None
+        with open(self.fname, 'r') as f:
+            lines = [
+                l.replace(
+                    ' ',
+                    '<span class="gspace">&nbsp;</span>'
+                ).replace("\n", "<br/>") for l in f.readlines()
+            ]
+        
+        return ''.join(lines)
+```
 
 ## Bonus glitchy logo
 
