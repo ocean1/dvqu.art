@@ -71,15 +71,14 @@ function click_callback(e) {
   if (e.target.tagName !== 'A')
       return;
 
-  if (e.target.href.startsWith('http') || e.target.href.startsWith('www')) {
-    return;
-  }
-
   uri_components = e.target.href.split("#");
   if (uri_components[1] == "/"){
     renderFi("/README.md");
     location.hash = "";
   } else {
+    if (e.target.href.startsWith('http') || e.target.href.startsWith('www')) {
+      return;
+    }
     renderFi(`${uri_components[0]}/${uri_components[1]}`);
     location.hash = e.target.hash;
   }
