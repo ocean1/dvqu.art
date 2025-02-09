@@ -67,16 +67,17 @@ function click_callback(e) {
   e.stopPropagation();// Don't bubble/capture the event any further
   return;
 }
-
-//window.addEventListener("hashchange", (event) => {alert(event);});
-window.addEventListener("load", (event) => {
+function hash_changed(){
   if(!window.location.hash){
     renderFi("/README.md");
   } else {
     uri_components = window.location.href.split("#")
     renderFi(`${uri_components[0]}/${uri_components[1]}`);
   }
-});
+}
+
+window.addEventListener("hashchange", (event) => {hash_changed();});
+window.addEventListener("load", (event) => {hash_changed();});
 
 if (document.addEventListener) {
     document.addEventListener('click', click_callback, false);
