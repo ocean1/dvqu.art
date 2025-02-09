@@ -3,12 +3,12 @@
 It's been a bit of time that I wanted to revamp my personal website, but didn't really found time or inspiration to do so.
 With a relaxing weekend and a bunch of hours to freely nerd at hand, my mind wandered to how I could possibly make bearable maintaining my personal website.
 
-Aside from the general feeling of my personal website that I wanted to change, there was something haunting me: dependancies.
+Aside from the general look and feel of my personal website that I wanted to change, there was something haunting me: dependencies.
 I seldom update my website, and having to recall commands, or worse having to fix broken dependancies is enough to drain the last bits of will I could have to update my personal website.
 Having to juggle between npm, python, pandoc, haskell and whatnot to be able to push a simple post is *unacceptable*.
 
 The other thing that made me despise updating my website was being tied to the workflow that static website generators that
-generate html files starting from markdown meaning now, you either use the github functionality where you put the static site under the `docs` folder, or you have to resort to a workflow, local, or with github actions, to push the generated site to pages, while keeping the sources somewhere else.
+generate html files starting from markdown. This way, you either use the github functionality where you put the static site under the `docs` folder, or you have to resort to a workflow, local, or with github actions, to push the generated site to pages, while keeping the sources somewhere else.
 Then you end up with multiple branches or repos just to manage an extremely small and simple website.
 
 ![Too many dependencies, too many workflow steps.](unacceptable-adventure-time.gif)
