@@ -1,0 +1,22 @@
+{
+  "name": "dvqu.art",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "mwg build",
+    "build:prod": "npm run bundle && mwg build --bundle",
+    "watch": "mwg watch",
+    "bundle": "mwg bundle",
+    "serve": "npx http-server -p 8080 -c-1"
+  },
+  "dependencies": {
+    "highlight.js": "^11.10.0",
+    "marked": "^14.1.2",
+    "marked-highlight": "^2.1.4"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "mwg": "file:../mwg"
+  }
+}

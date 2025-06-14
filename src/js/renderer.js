@@ -9,9 +9,16 @@ const renderer = {
       document.title = `_ocean: ${text}`;
     }
 
+    // Get the current document path from the hash (without anchors)
+    const currentHash = window.location.hash;
+    const documentPath = currentHash.split('#')[1] || ''; // Remove first # and any anchors
+    
+    // Create anchor href with document path and anchor
+    const anchorHref = documentPath ? `#${documentPath}#${escapedText}` : `#${escapedText}`;
+
     return `
             <h${depth}>
-              <a name="${escapedText}" class="anchor" href="${location.hash}#${escapedText}">
+              <a name="${escapedText}" class="anchor" href="${anchorHref}">
               ${text}
               </a>
             </h${depth}>`;
@@ -28,29 +35,40 @@ const renderer = {
 
     title = title || text;
     const hash = window.location.hash.slice(1, window.location.hash.length);
-    base = hash.split('/');
+    var base = hash.split('/');
     base = base.slice(0, base.length-1).join('/');
     href = `${base}/${href}`;
-    res = `<figure><img src="${href}" alt="${title}"/><figcaption>${text}</figcaption></figure>`;
+    var res = `<figure><img src="${href}" alt="${title}"/><figcaption>${text}</figcaption></figure>`;
     return res;
   }
 
 };
 
-const marked_highlight = markedHighlight.markedHighlight({
-    emptyLangClass: 'hljs',
-    langPrefix: 'hljs language-',
-    highlight(code, lang, info) {
-      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+// Initialize marked once with all configuration
+marked.setOptions({
+  breaks: true,
+  gfm: true
+});
+
+// Configure highlighting plugin
+const highlightPlugin = markedHighlight.markedHighlight({
+  langPrefix: 'hljs language-',
+  highlight(code, lang) {
+    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+    try {
       return hljs.highlight(code, { language }).value;
+    } catch (__) {
+      return code;
     }
-  });
+  }
+});
+
+// Use plugins
+marked.use(highlightPlugin);
+marked.use({ renderer });
 
 function renderEl(elid, content){
-  marked.use({ marked_highlight });
-  marked.use({ renderer });
   document.getElementById(elid).innerHTML = marked.parse(content);
-  hljs.highlightAll();
 }
 
 function renderFi(target){
@@ -71,7 +89,7 @@ function click_callback(e) {
   if (e.target.tagName !== 'A')
       return;
 
-  uri_components = e.target.href.split("#");
+  var uri_components = e.target.href.split("#");
   if (uri_components[1] == "/"){
     renderFi("/README.md");
     location.hash = "";
@@ -79,7 +97,7 @@ function click_callback(e) {
     if (e.target.href.startsWith('http') || e.target.href.startsWith('www')) {
       return;
     }
-    renderFi(`${uri_components[0]}/${uri_components[1]}`);
+    renderFi(uri_components[1]);
     location.hash = e.target.hash;
   }
   e.preventDefault(); // Cancel the native event
@@ -90,8 +108,8 @@ function hash_changed(){
   if(!window.location.hash){
     renderFi("/README.md");
   } else {
-    uri_components = window.location.href.split("#")
-    renderFi(`${uri_components[0]}/${uri_components[1]}`);
+    var uri_components = window.location.href.split("#")
+    renderFi(uri_components[1]);
   }
 }
 

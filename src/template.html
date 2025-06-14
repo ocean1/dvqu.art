@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>_ocean</title>
+
+  <!-- Font styles -->
+  <include src="static/fonts/fonts.css"></include>
+
+  <!-- Vendor styles -->
+  <include src="static/vendor/highlight-default.css"></include>
+  <include src="static/vendor/highlight-dark.css"></include>
+
+  <!-- Custom styles -->
+  <include src="src/css/index.css"></include>
+
+  <!-- Vendor scripts (order matters!) -->
+  <include src="static/vendor/marked.js"></include>
+  <include src="static/vendor/highlight.js"></include>
+  <include src="static/vendor/marked-highlight.js"></include>
+
+  <!-- Custom scripts -->
+  <include src="src/js/renderer.js"></include>
+</head>
+
+<body>
+<div class="head center">
+<div class="logo">
+<include src="src/assets/logo.ascii"></include>
+</div>
+<div class="nav center">
+<include type="md-inline">
+- [home](/)
+- [projects](/projects/README.md)
+- [whoami](/whoami/README.md)
+</include>
+</div>
+</div>
+
+<div id="content" class="content">
+</div>
+
+</body>
+
+</html>

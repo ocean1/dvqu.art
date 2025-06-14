@@ -1,0 +1,75 @@
+# Dependencies and bundling configuration
+# External dependencies and local files will be bundled and optimized
+
+dependencies:
+  # Markdown parsing
+  marked:
+    package: "marked"
+    version: "^14.1.2"
+    output: "vendor/marked.js"
+  
+  # Marked-Highlight plugin
+  marked-highlight:
+    package: "marked-highlight"
+    version: "^2.1.4"
+    output: "vendor/marked-highlight.js"
+    
+  # Syntax highlighting
+  highlight:
+    package: "highlight.js"
+    version: "^11.10.0"
+    output: "vendor/highlight.js"
+    includes:
+      # Only include languages we need
+      - "javascript"
+      - "typescript" 
+      - "python"
+      - "bash"
+      - "css"
+      - "xml"  # HTML/XML
+      - "json"
+      - "yaml"
+      - "markdown"
+    
+  # Highlight.js themes
+  highlight-themes:
+    package: "highlight.js"
+    version: "^11.10.0"
+    themes:
+      - name: "default"
+        output: "vendor/highlight-default.css"
+      - name: "github-dark"
+        output: "vendor/highlight-dark.css"
+
+# Font configuration
+fonts:
+  # Google Fonts to download and serve locally
+  google:
+    - family: "Fira Code"
+      weights: "300..700"
+    - family: "Fira Sans"
+      styles: "ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900"
+  output: "static/fonts"  # Where to save font files
+
+# Local file bundling configuration
+bundles:
+  # Bundle all CSS files into one
+  styles:
+    input:
+      - "static/fonts/fonts.css"  # Fonts first for proper loading
+      - "static/vendor/highlight-default.css"
+      - "static/vendor/highlight-dark.css"
+      - "src/css/index.css"
+    output: "static/bundle.css"
+    minify: true
+    
+  # Bundle all JS files into one
+  scripts:
+    input:
+      - "static/vendor/marked.js"
+      - "static/vendor/highlight.js"
+      - "static/vendor/marked-highlight.js"
+      - "src/js/renderer.js"
+    output: "static/bundle.js"
+    minify: true
+    format: "iife"  # or "es" for ES modules

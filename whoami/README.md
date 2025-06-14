@@ -14,7 +14,7 @@ I love teaching: I worked as *TA* in basic programming, and computer security co
 
 I play(ed) CTFs with several teams: TowerOfHanoi, Shellphish, and Mhackeroni and co-organized PoliCTF 2015, and developed challenges for iCTF 2017 and 2018.
 
-I love Reverse Engineering in <a href="/projects/#rom-hacking">all of its forms</a>. I worked on mobile malware analysis as a *Research Assistant* in Politecnico di Milano, working on the <a href="https://andrototal.org">Andrototal</a> project. I also worked on windows malware analysis as a freelance consultant. 
+I love Reverse Engineering in all of its forms. I worked on mobile malware analysis as a *Research Assistant* in Politecnico di Milano, working on the <a href="https://andrototal.org">Andrototal</a> project. I also worked on windows malware analysis as a freelance consultant. 
 I love thinkering with things, understand how they work, and I believe that science should be reproducible, and accessible. These ideas and topic resonated with [Andrea Continella](https://conand.me/), and we started developing the <a href="projects/#crave">CrAVe</a> project in order to develop a deeper understanding of anti-malware solutions, and how they are impacted by evasive malware.
 My main topic as a PhD has been the security <a href="https://robosec.org">Smart manufacturing systems (Industrial Robots)</a> and more in general on the inherent security challenges posed by IoT and embedded systems at large.
 
