@@ -55,10 +55,15 @@
   }
   
   // Load and play XM module (requires user interaction)
+  let isLoading = false;
   function loadAndPlayModule() {
     if (!audioStarted) {
       // Need user interaction first
       return;
+    }
+    
+    if (isLoading || isPlaying) {
+      return; // Already loading or playing
     }
     
     if (!player) {
@@ -70,15 +75,19 @@
       return;
     }
     
-    if (isPlaying) {
-      return; // Already playing
-    }
+    // Prevent multiple loads
+    isLoading = true;
     
     // Load the XM module  
     if (player && player.loadModule) {
       player.loadModule('static/xm/sobolsoft.xm');
+      // Reset loading flag after a delay
+      setTimeout(function() {
+        isLoading = false;
+      }, 1000);
     } else {
       console.error('ScripTracker loadModule method not found');
+      isLoading = false;
     }
   }
   
@@ -183,10 +192,15 @@
   
   // MutationObserver to watch for content changes
   let contentObserver = null;
+  let observerSetup = false;
   
   function observeContent() {
+    if (observerSetup) return;
+    
     const contentEl = document.getElementById('content');
     if (!contentEl) return;
+    
+    observerSetup = true;
     
     // Disconnect existing observer if any
     if (contentObserver) {
@@ -266,7 +280,11 @@
   }
   
   // Delayed initialization to ensure ScripTracker is loaded
+  let initCalled = false;
   function delayedInit() {
+    if (initCalled) return;
+    initCalled = true;
+    
     setTimeout(function() {
       // Don't init player yet - wait for user interaction
       observeContent(); // Set up content observer

@@ -113,10 +113,31 @@
       else if (phase < 7.0) {
         float explodePhase = (phase - 5.0) / 2.0;
         
-        // Explosion from center
-        float explodeAngle = hash(index) * PI * 2.0;
-        float explodeSpeed = hash(index + 1000.0) * 0.5 + 0.5;
-        vec2 explodePos = vec2(cos(explodeAngle) / aspect, sin(explodeAngle)) * explodeSpeed * explodePhase * 1.2;
+        // Explosion effect - particles fly outward from center
+        float particleRandom = hash(index);
+        float particleRandom2 = hash(index + 777.0);
+        float particleRandom3 = hash(index + 333.0);
+        
+        // Explosion direction and speed
+        float explodeAngle = particleRandom * PI * 2.0;
+        float explodeElevation = (particleRandom2 - 0.5) * PI * 0.7; // Some vertical spread
+        float explodeSpeed = particleRandom3 * 0.7 + 0.3; // Variable speeds
+        
+        // 3D explosion vector
+        vec3 explodeDir = vec3(
+          cos(explodeAngle) * cos(explodeElevation),
+          sin(explodeElevation) * 0.5,
+          sin(explodeAngle) * cos(explodeElevation)
+        );
+        
+        // Explosion dynamics - fast at start, slows down
+        float explodeT = 1.0 - pow(1.0 - explodePhase, 2.0);
+        float explodeRadius = explodeT * explodeSpeed * 2.0;
+        
+        vec2 explodePos = vec2(explodeDir.x / aspect, explodeDir.y) * explodeRadius;
+        
+        // Fade during explosion
+        float explodeBrightness = (1.0 - explodeT * 0.5) * 1.2;
         
         // Target sphere formation
         float sphereId = mod(index, 5.0);
@@ -145,9 +166,11 @@
         sphere3D.x = newX;
         
         vec2 spherePos = sphereCenter + vec2(sphere3D.x / aspect, sphere3D.y);
-        v_brightness = 0.7 + sphere3D.z * 2.0;
+        float sphereBrightness = 0.7 + sphere3D.z * 2.0;
         
-        pos = mix(explodePos, spherePos, smoothstep(0.1, 0.8, explodePhase));
+        // Smooth transition from explosion to spheres
+        pos = mix(explodePos, spherePos, smoothstep(0.3, 0.95, explodePhase));
+        v_brightness = mix(explodeBrightness, sphereBrightness, smoothstep(0.3, 0.95, explodePhase));
       }
       // Phase 7-10: Spheres to cubes
       else if (phase < 10.0) {
@@ -222,18 +245,18 @@
         pos = objCenter + vec2(morphed.x / aspect, morphed.y);
         v_brightness = 0.7 + morphed.z * 2.0;
       }
-      // Phase 10-13: Cubes to polygons
+      // Phase 10-13: Cubes to 3D polygons (pyramid, prism, etc)
       else if (phase < 13.0) {
         float morphPhase = (phase - 10.0) / 3.0;
         
         float objectId = mod(index, 6.0);
         float pointId = floor(index / 6.0);
         
-        // Object center
+        // Object center - keep consistent from previous phase
         float objAngle = (objectId / 6.0) * PI * 2.0 + u_time * 0.3;
         vec2 objCenter = vec2(cos(objAngle) * 0.5 / aspect, sin(objAngle) * 0.5);
         
-        // Start with cube
+        // Cube from previous phase (keeping same structure)
         float edge = mod(pointId * 7.0, 12.0);
         float t = fract(pointId * 0.618);
         vec3 cube3D;
@@ -258,25 +281,143 @@
           else cube3D = vec3(s, mix(-s, s, t), s);
         }
         
-        // Polygon
-        float sides = 3.0 + objectId;
-        float polyEdge = mod(pointId * 5.0, sides);
-        float polyT = fract(pointId * 0.382);
+        // 3D Polygons based on objectId
+        vec3 poly3D;
+        float polyPointId = mod(pointId, 60.0); // More points per shape
         
-        float angle1 = (polyEdge / sides) * PI * 2.0;
-        float angle2 = ((polyEdge + 1.0) / sides) * PI * 2.0;
+        if (objectId < 1.0) {
+          // Tetrahedron (4 faces)
+          float face = floor(polyPointId / 15.0);
+          float edgeT = mod(polyPointId, 15.0) / 14.0;
+          
+          vec3 v0, v1, v2;
+          if (face < 1.0) {
+            v0 = vec3(0, s, 0); v1 = vec3(s*0.866, -s*0.5, 0); v2 = vec3(-s*0.866, -s*0.5, 0);
+          } else if (face < 2.0) {
+            v0 = vec3(0, s, 0); v1 = vec3(0, 0, s); v2 = vec3(s*0.866, -s*0.5, 0);
+          } else if (face < 3.0) {
+            v0 = vec3(0, s, 0); v1 = vec3(-s*0.866, -s*0.5, 0); v2 = vec3(0, 0, s);
+          } else {
+            v0 = vec3(s*0.866, -s*0.5, 0); v1 = vec3(0, 0, s); v2 = vec3(-s*0.866, -s*0.5, 0);
+          }
+          
+          // Interpolate along edges
+          float edgeId = mod(polyPointId * 3.0, 3.0);
+          if (edgeId < 1.0) poly3D = mix(v0, v1, edgeT);
+          else if (edgeId < 2.0) poly3D = mix(v1, v2, edgeT);
+          else poly3D = mix(v2, v0, edgeT);
+          
+        } else if (objectId < 2.0) {
+          // Octahedron (8 faces)
+          float faceGroup = floor(polyPointId / 7.5);
+          float edgeT = mod(polyPointId * 2.0, 15.0) / 14.0;
+          
+          vec3 top = vec3(0, s, 0);
+          vec3 bottom = vec3(0, -s, 0);
+          vec3 v1 = vec3(s, 0, 0);
+          vec3 v2 = vec3(0, 0, s);
+          vec3 v3 = vec3(-s, 0, 0);
+          vec3 v4 = vec3(0, 0, -s);
+          
+          if (faceGroup < 2.0) {
+            poly3D = mix(top, mix(v1, v2, edgeT), mod(polyPointId * 0.7, 1.0));
+          } else if (faceGroup < 4.0) {
+            poly3D = mix(top, mix(v3, v4, edgeT), mod(polyPointId * 0.7, 1.0));
+          } else if (faceGroup < 6.0) {
+            poly3D = mix(bottom, mix(v1, v2, edgeT), mod(polyPointId * 0.7, 1.0));
+          } else {
+            poly3D = mix(bottom, mix(v3, v4, edgeT), mod(polyPointId * 0.7, 1.0));
+          }
+          
+        } else if (objectId < 3.0) {
+          // Triangular prism
+          float section = floor(polyPointId / 20.0);
+          float sectionT = mod(polyPointId, 20.0) / 19.0;
+          
+          if (section < 1.0) {
+            // Top triangle
+            vec3 v0 = vec3(0, s*0.5, s);
+            vec3 v1 = vec3(s*0.866, s*0.5, -s*0.5);
+            vec3 v2 = vec3(-s*0.866, s*0.5, -s*0.5);
+            float edge = mod(polyPointId * 3.0, 3.0);
+            if (edge < 1.0) poly3D = mix(v0, v1, sectionT);
+            else if (edge < 2.0) poly3D = mix(v1, v2, sectionT);
+            else poly3D = mix(v2, v0, sectionT);
+          } else if (section < 2.0) {
+            // Bottom triangle
+            vec3 v0 = vec3(0, -s*0.5, s);
+            vec3 v1 = vec3(s*0.866, -s*0.5, -s*0.5);
+            vec3 v2 = vec3(-s*0.866, -s*0.5, -s*0.5);
+            float edge = mod(polyPointId * 3.0, 3.0);
+            if (edge < 1.0) poly3D = mix(v0, v1, sectionT);
+            else if (edge < 2.0) poly3D = mix(v1, v2, sectionT);
+            else poly3D = mix(v2, v0, sectionT);
+          } else {
+            // Vertical edges
+            float edgeId = mod(polyPointId * 4.0, 3.0);
+            vec3 top, bot;
+            if (edgeId < 1.0) {
+              top = vec3(0, s*0.5, s); bot = vec3(0, -s*0.5, s);
+            } else if (edgeId < 2.0) {
+              top = vec3(s*0.866, s*0.5, -s*0.5); bot = vec3(s*0.866, -s*0.5, -s*0.5);
+            } else {
+              top = vec3(-s*0.866, s*0.5, -s*0.5); bot = vec3(-s*0.866, -s*0.5, -s*0.5);
+            }
+            poly3D = mix(top, bot, sectionT);
+          }
+          
+        } else if (objectId < 4.0) {
+          // Pyramid (square base)
+          float face = floor(polyPointId / 15.0);
+          float edgeT = mod(polyPointId, 15.0) / 14.0;
+          
+          vec3 apex = vec3(0, s, 0);
+          vec3 base1 = vec3(s, -s*0.5, s);
+          vec3 base2 = vec3(s, -s*0.5, -s);
+          vec3 base3 = vec3(-s, -s*0.5, -s);
+          vec3 base4 = vec3(-s, -s*0.5, s);
+          
+          if (face < 1.0) {
+            float e = mod(polyPointId * 3.0, 3.0);
+            if (e < 1.0) poly3D = mix(apex, base1, edgeT);
+            else if (e < 2.0) poly3D = mix(base1, base2, edgeT);
+            else poly3D = mix(base2, apex, edgeT);
+          } else if (face < 2.0) {
+            float e = mod(polyPointId * 3.0, 3.0);
+            if (e < 1.0) poly3D = mix(apex, base3, edgeT);
+            else if (e < 2.0) poly3D = mix(base3, base4, edgeT);
+            else poly3D = mix(base4, apex, edgeT);
+          } else {
+            // Base square
+            float e = mod(polyPointId * 4.0, 4.0);
+            if (e < 1.0) poly3D = mix(base1, base2, edgeT);
+            else if (e < 2.0) poly3D = mix(base2, base3, edgeT);
+            else if (e < 3.0) poly3D = mix(base3, base4, edgeT);
+            else poly3D = mix(base4, base1, edgeT);
+          }
+          
+        } else {
+          // Dodecahedron approximation (12 pentagonal faces - simplified)
+          float phi = (1.0 + sqrt(5.0)) / 2.0;
+          float invPhi = 1.0 / phi;
+          
+          // Sample vertices
+          float vId = mod(polyPointId * 0.3, 20.0);
+          if (vId < 4.0) {
+            poly3D = vec3(s, s, s) * (mod(vId, 2.0) * 2.0 - 1.0);
+          } else if (vId < 8.0) {
+            poly3D = vec3(0, s*invPhi, s*phi) * (mod(vId, 2.0) * 2.0 - 1.0);
+          } else if (vId < 12.0) {
+            poly3D = vec3(s*invPhi, s*phi, 0) * (mod(vId, 2.0) * 2.0 - 1.0);
+          } else {
+            poly3D = vec3(s*phi, 0, s*invPhi) * (mod(vId, 2.0) * 2.0 - 1.0);
+          }
+          poly3D *= 0.5;
+        }
         
-        vec3 poly3D = mix(
-          vec3(cos(angle1), sin(angle1), 0.0),
-          vec3(cos(angle2), sin(angle2), 0.0),
-          polyT
-        ) * s;
-        poly3D.z = sin(polyT * PI) * 0.05;
-        
-        // Rotate everything
+        // Apply same rotation to both shapes
         float rotX = u_time * 0.7 + objectId;
         float rotY = u_time + objectId * 0.3;
-        float rotZ = u_time * 0.5;
         
         vec3 temp;
         // Rotate cube
@@ -294,44 +435,142 @@
         temp = poly3D;
         poly3D.x = temp.x * cos(rotY) - temp.z * sin(rotY);
         poly3D.z = temp.x * sin(rotY) + temp.z * cos(rotY);
-        temp = poly3D;
-        poly3D.x = temp.x * cos(rotZ) - temp.y * sin(rotZ);
-        poly3D.y = temp.x * sin(rotZ) + temp.y * cos(rotZ);
         
         vec3 shape3D = mix(cube3D, poly3D, smoothstep(0.0, 1.0, morphPhase));
         pos = objCenter + vec2(shape3D.x / aspect, shape3D.y);
         v_brightness = 0.7 + shape3D.z * 2.0;
       }
-      // Phase 13-16: Polygons back to tunnel
+      // Phase 13-16: 3D Polygons back to tunnel
       else {
         float morphPhase = (phase - 13.0) / 3.0;
         
         float objectId = mod(index, 6.0);
         float pointId = floor(index / 6.0);
         
-        // Polygon position (from previous phase)
+        // Keep polygon from previous phase - must match exactly
+        vec3 poly3D;
+        float polyPointId = mod(pointId, 60.0);
+        
         float objAngle = (objectId / 6.0) * PI * 2.0 + u_time * 0.3;
-        vec2 objCenter = vec2(cos(objAngle) * 0.5 / aspect, sin(objAngle) * 0.5) * (1.0 - morphPhase * 0.8);
+        vec2 objCenter = vec2(cos(objAngle) * 0.5 / aspect, sin(objAngle) * 0.5);
         
-        float sides = 3.0 + objectId;
-        float polyEdge = mod(pointId * 5.0, sides);
-        float polyT = fract(pointId * 0.382);
+        // Same polygon generation as phase 10-13
+        float s = 0.2;
+        if (objectId < 1.0) {
+          // Tetrahedron
+          float face = floor(polyPointId / 15.0);
+          float edgeT = mod(polyPointId, 15.0) / 14.0;
+          vec3 v0, v1, v2;
+          if (face < 1.0) {
+            v0 = vec3(0, s, 0); v1 = vec3(s*0.866, -s*0.5, 0); v2 = vec3(-s*0.866, -s*0.5, 0);
+          } else if (face < 2.0) {
+            v0 = vec3(0, s, 0); v1 = vec3(0, 0, s); v2 = vec3(s*0.866, -s*0.5, 0);
+          } else if (face < 3.0) {
+            v0 = vec3(0, s, 0); v1 = vec3(-s*0.866, -s*0.5, 0); v2 = vec3(0, 0, s);
+          } else {
+            v0 = vec3(s*0.866, -s*0.5, 0); v1 = vec3(0, 0, s); v2 = vec3(-s*0.866, -s*0.5, 0);
+          }
+          float edgeId = mod(polyPointId * 3.0, 3.0);
+          if (edgeId < 1.0) poly3D = mix(v0, v1, edgeT);
+          else if (edgeId < 2.0) poly3D = mix(v1, v2, edgeT);
+          else poly3D = mix(v2, v0, edgeT);
+        } else if (objectId < 2.0) {
+          // Octahedron
+          float faceGroup = floor(polyPointId / 7.5);
+          float edgeT = mod(polyPointId * 2.0, 15.0) / 14.0;
+          vec3 top = vec3(0, s, 0);
+          vec3 bottom = vec3(0, -s, 0);
+          vec3 v1 = vec3(s, 0, 0);
+          vec3 v2 = vec3(0, 0, s);
+          vec3 v3 = vec3(-s, 0, 0);
+          vec3 v4 = vec3(0, 0, -s);
+          if (faceGroup < 2.0) {
+            poly3D = mix(top, mix(v1, v2, edgeT), mod(polyPointId * 0.7, 1.0));
+          } else if (faceGroup < 4.0) {
+            poly3D = mix(top, mix(v3, v4, edgeT), mod(polyPointId * 0.7, 1.0));
+          } else if (faceGroup < 6.0) {
+            poly3D = mix(bottom, mix(v1, v2, edgeT), mod(polyPointId * 0.7, 1.0));
+          } else {
+            poly3D = mix(bottom, mix(v3, v4, edgeT), mod(polyPointId * 0.7, 1.0));
+          }
+        } else if (objectId < 3.0) {
+          // Triangular prism
+          float section = floor(polyPointId / 20.0);
+          float sectionT = mod(polyPointId, 20.0) / 19.0;
+          if (section < 1.0) {
+            vec3 v0 = vec3(0, s*0.5, s);
+            vec3 v1 = vec3(s*0.866, s*0.5, -s*0.5);
+            vec3 v2 = vec3(-s*0.866, s*0.5, -s*0.5);
+            float edge = mod(polyPointId * 3.0, 3.0);
+            if (edge < 1.0) poly3D = mix(v0, v1, sectionT);
+            else if (edge < 2.0) poly3D = mix(v1, v2, sectionT);
+            else poly3D = mix(v2, v0, sectionT);
+          } else if (section < 2.0) {
+            vec3 v0 = vec3(0, -s*0.5, s);
+            vec3 v1 = vec3(s*0.866, -s*0.5, -s*0.5);
+            vec3 v2 = vec3(-s*0.866, -s*0.5, -s*0.5);
+            float edge = mod(polyPointId * 3.0, 3.0);
+            if (edge < 1.0) poly3D = mix(v0, v1, sectionT);
+            else if (edge < 2.0) poly3D = mix(v1, v2, sectionT);
+            else poly3D = mix(v2, v0, sectionT);
+          } else {
+            float edgeId = mod(polyPointId * 4.0, 3.0);
+            vec3 top, bot;
+            if (edgeId < 1.0) {
+              top = vec3(0, s*0.5, s); bot = vec3(0, -s*0.5, s);
+            } else if (edgeId < 2.0) {
+              top = vec3(s*0.866, s*0.5, -s*0.5); bot = vec3(s*0.866, -s*0.5, -s*0.5);
+            } else {
+              top = vec3(-s*0.866, s*0.5, -s*0.5); bot = vec3(-s*0.866, -s*0.5, -s*0.5);
+            }
+            poly3D = mix(top, bot, sectionT);
+          }
+        } else if (objectId < 4.0) {
+          // Pyramid
+          float face = floor(polyPointId / 15.0);
+          float edgeT = mod(polyPointId, 15.0) / 14.0;
+          vec3 apex = vec3(0, s, 0);
+          vec3 base1 = vec3(s, -s*0.5, s);
+          vec3 base2 = vec3(s, -s*0.5, -s);
+          vec3 base3 = vec3(-s, -s*0.5, -s);
+          vec3 base4 = vec3(-s, -s*0.5, s);
+          if (face < 1.0) {
+            float e = mod(polyPointId * 3.0, 3.0);
+            if (e < 1.0) poly3D = mix(apex, base1, edgeT);
+            else if (e < 2.0) poly3D = mix(base1, base2, edgeT);
+            else poly3D = mix(base2, apex, edgeT);
+          } else if (face < 2.0) {
+            float e = mod(polyPointId * 3.0, 3.0);
+            if (e < 1.0) poly3D = mix(apex, base3, edgeT);
+            else if (e < 2.0) poly3D = mix(base3, base4, edgeT);
+            else poly3D = mix(base4, apex, edgeT);
+          } else {
+            float e = mod(polyPointId * 4.0, 4.0);
+            if (e < 1.0) poly3D = mix(base1, base2, edgeT);
+            else if (e < 2.0) poly3D = mix(base2, base3, edgeT);
+            else if (e < 3.0) poly3D = mix(base3, base4, edgeT);
+            else poly3D = mix(base4, base1, edgeT);
+          }
+        } else {
+          // Dodecahedron
+          float phi = (1.0 + sqrt(5.0)) / 2.0;
+          float invPhi = 1.0 / phi;
+          float vId = mod(polyPointId * 0.3, 20.0);
+          if (vId < 4.0) {
+            poly3D = vec3(s, s, s) * (mod(vId, 2.0) * 2.0 - 1.0);
+          } else if (vId < 8.0) {
+            poly3D = vec3(0, s*invPhi, s*phi) * (mod(vId, 2.0) * 2.0 - 1.0);
+          } else if (vId < 12.0) {
+            poly3D = vec3(s*invPhi, s*phi, 0) * (mod(vId, 2.0) * 2.0 - 1.0);
+          } else {
+            poly3D = vec3(s*phi, 0, s*invPhi) * (mod(vId, 2.0) * 2.0 - 1.0);
+          }
+          poly3D *= 0.5;
+        }
         
-        float angle1 = (polyEdge / sides) * PI * 2.0;
-        float angle2 = ((polyEdge + 1.0) / sides) * PI * 2.0;
-        
-        vec3 poly3D = mix(
-          vec3(cos(angle1), sin(angle1), 0.0),
-          vec3(cos(angle2), sin(angle2), 0.0),
-          polyT
-        ) * 0.2;
-        poly3D.z = sin(polyT * PI) * 0.05;
-        
-        // Rotate polygon
+        // Apply rotation (continuous from previous phase)
         float rotX = u_time * 0.7 + objectId;
         float rotY = u_time + objectId * 0.3;
-        float rotZ = u_time * 0.5;
-        
         vec3 temp;
         temp = poly3D;
         poly3D.y = temp.y * cos(rotX) - temp.z * sin(rotX);
@@ -339,19 +578,16 @@
         temp = poly3D;
         poly3D.x = temp.x * cos(rotY) - temp.z * sin(rotY);
         poly3D.z = temp.x * sin(rotY) + temp.z * cos(rotY);
-        temp = poly3D;
-        poly3D.x = temp.x * cos(rotZ) - temp.y * sin(rotZ);
-        poly3D.y = temp.x * sin(rotZ) + temp.y * cos(rotZ);
         
+        // Fade out object center
+        objCenter *= (1.0 - morphPhase * 0.8);
         vec2 polyPos = objCenter + vec2(poly3D.x / aspect, poly3D.y);
         
-        // Target tunnel - matching the beginning tunnel parameters
+        // Target tunnel position
         float ring = mod(index, 150.0);
         float segment = floor(index / 150.0);
-        // Start at depth 0 to continue smoothly from where tunnel begins
-        float depth = segment * 0.15 + morphPhase * 4.0; 
+        float depth = segment * 0.15 + morphPhase * 4.0;
         
-        // Add tunnel curves for continuity
         float curve = sin(depth * 0.15 + u_time * 0.5) * 0.08 * morphPhase;
         float curveY = cos(depth * 0.1 + u_time * 0.3) * 0.04 * morphPhase;
         
