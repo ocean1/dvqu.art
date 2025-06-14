@@ -98,7 +98,7 @@ https://github.com/highlightjs/highlight.js/issues/2277`),ue=N,te=P),X===void 0&
     
     void main() {
       float index = a_index;
-      float phase = mod(u_time * 0.35, 20.0);
+      float phase = mod(u_time * 0.25, 16.0);
       float aspect = u_resolution.x / max(u_resolution.y, 1.0);
       
       vec2 pos = vec2(0.0);
@@ -454,7 +454,7 @@ https://github.com/highlightjs/highlight.js/issues/2277`),ue=N,te=P),X===void 0&
       gl_FragColor = vec4(vec3(1.0), alpha);
     }
   `;function m(){const b=document.querySelector(".logo");if(!b||b.dataset.wobbleApplied)return;b.dataset.originalContent||(b.dataset.originalContent=b.innerHTML);const T=document.createElement("style");T.id="logo-wobble-style";const I=b.dataset.originalContent.split(/\r?\n/);let R="";I.forEach((se,$)=>{const U="wobble-line-"+$;R+="@keyframes "+U+` {
-`;for(let de=0;de<=100;de+=5){const H=de/100*Math.PI*2,ke=Math.sin(H+$*.3)*10;R+="  "+de+"% { transform: translateX("+ke+`px); }
+`;for(let de=0;de<=100;de+=5){const H=de/100*Math.PI*2,ke=Math.sin(H+$*.7)*10;R+="  "+de+"% { transform: translateX("+ke+`px); }
 `}R+=`}
 `}),R+=`.wobble-line { display: block; white-space: pre; line-height: 1; margin: 0; padding: 0; animation: 2.5s ease-in-out infinite; overflow: hidden; }
 `,R+=`.logo { overflow: hidden; }

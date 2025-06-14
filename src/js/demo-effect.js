@@ -33,7 +33,7 @@
     
     void main() {
       float index = a_index;
-      float phase = mod(u_time * 0.35, 20.0);
+      float phase = mod(u_time * 0.25, 16.0);
       float aspect = u_resolution.x / max(u_resolution.y, 1.0);
       
       vec2 pos = vec2(0.0);
@@ -420,7 +420,7 @@
       // Generate smooth sine wave keyframes
       for (let i = 0; i <= 100; i += 5) {
         const time = (i / 100) * Math.PI * 2;
-        const offset = Math.sin(time + index * 0.3) * 10;
+        const offset = Math.sin(time + index * 0.7) * 10;
         css += '  ' + i + '% { transform: translateX(' + offset + 'px); }\n';
       }
       
