@@ -51,6 +51,12 @@ fonts:
       styles: "ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900"
   output: "static/fonts"  # Where to save font files
 
+# Asset copying configuration
+assets:
+  # Copy XM module files
+  - source: "src/xm/Lz0 - Sobolsoft Software kg.xm"
+    destination: "static/xm/sobolsoft.xm"
+
 # Local file bundling configuration
 bundles:
   # Bundle all CSS files into one
@@ -69,7 +75,9 @@ bundles:
       - "static/vendor/marked.js"
       - "static/vendor/highlight.js"
       - "static/vendor/marked-highlight.js"
+      - "src/js/scriptracker-1.1.1.min.js"
       - "src/js/renderer.js"
+      - "src/js/xm-player.js"
     output: "static/bundle.js"
     minify: true
     format: "iife"  # or "es" for ES modules
