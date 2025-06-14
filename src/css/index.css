@@ -1,35 +1,96 @@
+  /* Reset and base styles */
+  * {
+    box-sizing: border-box;
+  }
+
   html {
-    min-width: 300px;
+    font-size: 16px; /* Base font size for rem units */
   }
 
   body {
     background-color: rgb(26, 26, 26);
-    color:floralwhite;
+    color: floralwhite;
     font-family: "Fira Code", serif;
     width: 100%;
-    margin: 0px;
+    margin: 0;
+    padding: 0;
   }
 
   .center {
-      text-align: center;
+    text-align: center;
   }
 
-  .logo {
-    font-size: 1em;
-    font-size: 1vw;
-    min-width: 300px;
-  }
-
+  /* Typography - Mobile first */
   h1 {
-    font-size: 1.2em;
+    font-size: 1.5rem;
+    margin: 1rem 0;
   }
 
   h2 {
-    font-size: 1em;
+    font-size: 1.25rem;
+    margin: 0.875rem 0;
   }
 
   h3 {
+    font-size: 1.125rem;
+    margin: 0.75rem 0;
+  }
+
+  /* Logo styles */
+  .logo {
     font-size: 0.8em;
+    font-size: 0.8vw;
+    min-width: 300px;
+  }
+  
+  /* Mobile adjustments */
+  @media (max-width: 767px) {
+    .logo {
+      font-size: 0.4rem;
+      min-width: auto;
+    }
+  }
+  
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .logo {
+      font-size: 0.7vw;
+    }
+  }
+  
+  @media (min-width: 1440px) {
+    .logo {
+      font-size: 0.9vw;
+    }
+  }
+
+  /* Tablet and up */
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 1.75rem;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+    }
+    
+    h3 {
+      font-size: 1.25rem;
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 1024px) {
+    h1 {
+      font-size: 2rem;
+    }
+    
+    h2 {
+      font-size: 1.75rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+    }
   }
 
   @keyframes textShadow {
@@ -98,45 +159,94 @@
     }
   }
 
+  /* Header styles - Mobile first */
   .head {
-    padding-top: 3em;
+    padding-top: 1.5rem;
     position: sticky;
-    display: inline-block;
     top: 0;
     z-index: 999;
     background-color: rgb(26, 26, 26);
     animation: textShadow 1.6s infinite;
     width: 100%;
-    min-width: 300px;
   }
 
+  /* Content container - Mobile first */
   .content {
-    margin-top: 3em;
-    margin-bottom: 2em;
-    padding-left: 10%;
-    padding-left: 4vw;
-    padding-right: 10%;
-    padding-right: 4vw;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
+  /* Navigation - Mobile first */
   .nav {
-    margin-top: 1em;
-    box-shadow: 0em 1em 0em 1em rgba(26,26,26,0.7);
+    margin-top: 1rem;
+    padding-bottom: 1rem;
+    box-shadow: 0 0.5rem 1rem 0.5rem rgba(26,26,26,0.7);
   }
 
   .nav ul {
     list-style-type: none;
-    padding-inline-start: 0px;
-    margin-block-start: 1em;
-    margin-block-start: 1vw;
-    margin-block-end: 1em;
-    margin-block-end: 1vw;
+    padding: 0;
+    margin: 0.5rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
   }
 
   .nav ul li {
-    display: inline-block;
-    margin: 0 1em;
-    margin: 0 1vw;
+    margin: 0.25rem;
+  }
+
+  /* Tablet and up */
+  @media (min-width: 768px) {
+    .head {
+      padding-top: 2rem;
+    }
+    
+    .content {
+      margin-top: 3rem;
+      padding-left: 5%;
+      padding-right: 5%;
+    }
+    
+    .nav {
+      box-shadow: 0 1rem 1rem 1rem rgba(26,26,26,0.7);
+    }
+    
+    .nav ul {
+      margin: 1rem 0;
+      gap: 1rem;
+    }
+    
+    .nav ul li {
+      margin: 0 0.5rem;
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 1024px) {
+    .head {
+      padding-top: 3rem;
+    }
+    
+    .content {
+      padding-left: 10%;
+      padding-right: 10%;
+    }
+    
+    .nav ul li {
+      margin: 0 1rem;
+    }
+  }
+
+  /* Large desktop */
+  @media (min-width: 1440px) {
+    .content {
+      padding-left: 15%;
+      padding-right: 15%;
+    }
   }
   
   .nav ul li:before {
@@ -192,42 +302,166 @@
 
 
 
+  /* Blockquotes - Mobile first */
   blockquote {
     background: #494949;
-    border-left: 10px solid #ccc;
-    padding: 0.5em 10px;
+    border-left: 5px solid #ccc;
+    padding: 0.75rem 1rem;
     quotes: "\201C""\201D""\2018""\2019";
+    margin: 1rem 0;
   }
+  
   blockquote:before {
     color: #ccc;
     content: open-quote;
-    font-size: 1em;
+    font-size: 1.5rem;
     line-height: 0.1em;
     padding-right: 0.25em;
     vertical-align: -0.4em;
   }
+  
   blockquote p {
     display: inline;
   }
 
+  /* Code blocks - Mobile first */
+  pre {
+    overflow-x: auto;
+    padding: 1rem;
+    background: #2d2d2d;
+    border-radius: 4px;
+    margin: 1rem 0;
+    font-size: 0.875rem;
+  }
+
+  code {
+    background: #2d2d2d;
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+    font-size: 0.875rem;
+  }
+
+  pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  /* Tablet and up */
+  @media (min-width: 768px) {
+    blockquote {
+      border-left-width: 10px;
+      padding: 1rem 1.5rem;
+    }
+    
+    pre {
+      font-size: 0.9375rem;
+    }
+    
+    code {
+      font-size: 0.9375rem;
+    }
+  }
+
+  /* Figure and images - Mobile first */
   figure {
     text-align: center;
     font-style: italic;
-    font-size: smaller;
+    font-size: 0.875rem;
     text-indent: 0;
     border: thin silver solid;
-    padding: 0.5em;
-    display: inline-block;
-    margin-left: auto;
-    margin-right: auto;
-    /*width: auto;
-    height: auto;*/
-    max-width: 50%;
-    min-width: 280px;
+    padding: 0.5rem;
+    display: block;
+    margin: 1rem auto;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  figure img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  figure figcaption {
+    margin-top: 0.5rem;
   }
 
   img {
-    min-width: 5%;
     max-width: 100%;
-    max-height: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Tablet and up */
+  @media (min-width: 768px) {
+    figure {
+      display: inline-block;
+      width: auto;
+      max-width: 80%;
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 1024px) {
+    figure {
+      max-width: 60%;
+    }
+  }
+
+  /* Tables - Mobile first */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.875rem;
+  }
+
+  table th, 
+  table td {
+    padding: 0.5rem;
+    border: 1px solid #555;
+    text-align: left;
+  }
+
+  table th {
+    background: #333;
+  }
+
+  /* Make tables scroll on mobile */
+  @media (max-width: 767px) {
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  }
+
+  /* Lists */
+  ul, ol {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  @media (min-width: 768px) {
+    ul, ol {
+      padding-left: 2rem;
+    }
+  }
+
+  /* Paragraphs */
+  p {
+    margin: 1rem 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Links in content */
+  .content a {
+    word-break: break-word;
+  }
+
+  /* Ensure horizontal scrollbar doesn't appear */
+  img, video, iframe {
+    max-width: 100%;
   }
