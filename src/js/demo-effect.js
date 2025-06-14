@@ -19,6 +19,7 @@
   
   // Shader sources
   const vertexShaderSource = `
+    precision mediump float;
     attribute float a_index;
     uniform float u_time;
     uniform vec2 u_resolution;
@@ -368,13 +369,17 @@
       }
       
       gl_Position = vec4(pos, 0.0, 1.0);
-      gl_PointSize = 2.0;
+      
+      // Scale point size based on viewport
+      float viewportScale = min(u_resolution.x, u_resolution.y) / 800.0;
+      gl_PointSize = max(1.0, 2.0 * viewportScale);
     }
   `;
   
   const fragmentShaderSource = `
     precision mediump float;
     uniform float u_fade;
+    uniform vec2 u_resolution;
     varying float v_brightness;
     
     void main() {
@@ -387,7 +392,11 @@
         discard;
       }
       
-      float alpha = v_brightness * u_fade * 0.56;
+      // Reduce opacity on smaller viewports
+      float viewportScale = min(u_resolution.x, u_resolution.y) / 800.0;
+      float mobileOpacityScale = mix(0.5, 1.0, clamp(viewportScale, 0.0, 1.0));
+      
+      float alpha = v_brightness * u_fade * 0.56 * mobileOpacityScale;
       gl_FragColor = vec4(vec3(1.0), alpha);
     }
   `;

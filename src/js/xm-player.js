@@ -103,6 +103,10 @@
     } else {
       if (player) {
         player.play();
+        // Ensure event is dispatched even if ScripTracker doesn't fire it
+        isPlaying = true;
+        updatePlayButton();
+        window.dispatchEvent(new Event('xm-play'));
       } else {
         loadAndPlayModule();
       }
@@ -177,16 +181,51 @@
     }
   }
   
+  // MutationObserver to watch for content changes
+  let contentObserver = null;
+  
+  function observeContent() {
+    const contentEl = document.getElementById('content');
+    if (!contentEl) return;
+    
+    // Disconnect existing observer if any
+    if (contentObserver) {
+      contentObserver.disconnect();
+    }
+    
+    // Create new observer
+    contentObserver = new MutationObserver(function(mutations) {
+      // Check if we're on whoami page and content has been added
+      const isWhoamiPage = window.location.hash.includes('whoami');
+      if (isWhoamiPage) {
+        // Look for h1 element in the new content
+        const h1 = contentEl.querySelector('h1');
+        if (h1 && !document.getElementById('xm-play-button')) {
+          addPlayButton();
+          updatePlayButton();
+        }
+      }
+    });
+    
+    // Start observing
+    contentObserver.observe(contentEl, {
+      childList: true,
+      subtree: true
+    });
+  }
+  
   // Check if we're on the whoami page
   function checkPage() {
     const hash = window.location.hash;
     const isWhoamiPage = hash.includes('whoami');
     
     if (isWhoamiPage) {
-      setTimeout(function() {
-        addPlayButton();
-        updatePlayButton(); // Update button state
-      }, 100); // Give content time to load
+      // Try to add button immediately if content is ready
+      addPlayButton();
+      updatePlayButton();
+      
+      // Also set up observer for when content loads
+      observeContent();
       
       // Auto-play if user has interacted (clicked nav link)
       if (audioStarted && !isPlaying) {
@@ -207,8 +246,8 @@
     // Call the original function
     originalRenderFi.apply(this, arguments);
     
-    // Check if we should play/stop music
-    setTimeout(checkPage, 100); // Small delay to ensure content is loaded
+    // Check page immediately - the MutationObserver will handle content loading
+    checkPage();
   };
   
   // Add click handler to whoami navigation link
@@ -230,6 +269,7 @@
   function delayedInit() {
     setTimeout(function() {
       // Don't init player yet - wait for user interaction
+      observeContent(); // Set up content observer
       checkPage();
       addNavClickHandler();
     }, 100); // Small delay to ensure bundle is fully executed
