@@ -41,6 +41,8 @@
     font-size: 0.8em;
     font-size: 0.8vw;
     min-width: 300px;
+    position: relative;
+    z-index: 1;
   }
   
   /* Mobile adjustments */

@@ -26,11 +26,15 @@
         player.on(ScripTracker.Events.play, function() {
           isPlaying = true;
           updatePlayButton();
+          // Emit custom event for demo effect
+          window.dispatchEvent(new Event('xm-play'));
         });
         
         player.on(ScripTracker.Events.stop, function() {
           isPlaying = false;
           updatePlayButton();
+          // Emit custom event for demo effect
+          window.dispatchEvent(new Event('xm-pause'));
         });
         
         player.on(ScripTracker.Events.songEnded, function() {
@@ -120,6 +124,12 @@
     
     // Check if button already exists
     if (document.getElementById('xm-play-button')) return;
+    
+    // Store original logo content for demo effect
+    const logo = document.querySelector('.logo');
+    if (logo && !logo.dataset.originalContent) {
+      logo.dataset.originalContent = logo.innerHTML;
+    }
     
     // Create play button
     const button = document.createElement('button');

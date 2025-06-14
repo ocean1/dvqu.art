@@ -78,6 +78,7 @@ bundles:
       - "src/js/scriptracker-1.1.1.min.js"
       - "src/js/renderer.js"
       - "src/js/xm-player.js"
+      - "src/js/demo-effect.js"
     output: "static/bundle.js"
     minify: true
     format: "iife"  # or "es" for ES modules
