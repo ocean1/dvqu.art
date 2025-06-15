@@ -46,26 +46,6 @@
     line-height: 1vw;
   }
   
-  /* Mobile adjustments */
-  @media (max-width: 767px) {
-    .logo {
-      font-size: 0.4rem;
-      min-width: auto;
-    }
-  }
-  
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .logo {
-      font-size: 0.7vw;
-    }
-  }
-  
-  @media (min-width: 1440px) {
-    .logo {
-      font-size: 0.9vw;
-    }
-  }
-
   /* Tablet and up */
   @media (min-width: 768px) {
     h1 {
