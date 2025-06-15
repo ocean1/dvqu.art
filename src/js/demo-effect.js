@@ -652,7 +652,7 @@
     style.id = 'logo-wobble-style';
     
     // Parse lines
-    const lines = logo.dataset.originalContent.split(/\r?\n/);
+    const lines = logo.dataset.originalContent.split(/\r?\n/).filter((line => line.length > 0));
     
     // Generate CSS animations on the fly
     let css = '';

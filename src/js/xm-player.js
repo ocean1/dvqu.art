@@ -18,7 +18,7 @@
         
         // Set up event handlers
         player.on(ScripTracker.Events.playerReady, function(playerInstance) {
-          console.log("XM module ready");
+          //console.log("XM module ready");
           // Auto-play since user has already interacted
           playerInstance.play();
         });
