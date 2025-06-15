@@ -43,6 +43,7 @@
     min-width: 300px;
     position: relative;
     z-index: 1;
+    line-height: 1vw;
   }
   
   /* Mobile adjustments */
