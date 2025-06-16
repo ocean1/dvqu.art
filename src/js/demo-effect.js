@@ -1,22 +1,22 @@
 // Demoscene WebGL effect for whoami page
-(function() {
+(function () {
   let canvas = null;
   let gl = null;
   let program = null;
   let isRunning = false;
   let startTime = 0;
   let animationFrame = null;
-  
+
   // Vertex positions for particles (pre-computed for performance)
   const NUM_PARTICLES = 15000;
   const particlePositions = new Float32Array(NUM_PARTICLES * 2);
   const particleIndices = new Float32Array(NUM_PARTICLES);
-  
+
   // Initialize particle data
   for (let i = 0; i < NUM_PARTICLES; i++) {
     particleIndices[i] = i;
   }
-  
+
   // Shader sources
   const vertexShaderSource = `
     precision mediump float;
@@ -611,7 +611,7 @@
       gl_PointSize = max(1.0, 2.0 * viewportScale);
     }
   `;
-  
+
   const fragmentShaderSource = `
     precision mediump float;
     uniform float u_fade;
@@ -636,80 +636,80 @@
       gl_FragColor = vec4(vec3(1.0), alpha);
     }
   `;
-  
+
   // Logo wobble effect - CSS based
   function applyLogoWobble() {
     const logo = document.querySelector('.logo');
     if (!logo || logo.dataset.wobbleApplied) return;
-    
+
     // Store original content
     if (!logo.dataset.originalContent) {
       logo.dataset.originalContent = logo.innerHTML;
     }
-    
+
     // Create style element for animations
     const style = document.createElement('style');
     style.id = 'logo-wobble-style';
-    
+
     // Parse lines
     const lines = logo.dataset.originalContent.split(/\r?\n/).filter((line => line.length > 0));
-    
+
     // Generate CSS animations on the fly
     let css = '';
-    
+
     // Create keyframes for each line
     lines.forEach((line, index) => {
       const animName = 'wobble-line-' + index;
       css += '@keyframes ' + animName + ' {\n';
-      
+
       // Generate smooth sine wave keyframes
       for (let i = 0; i <= 100; i += 5) {
         const time = (i / 100) * Math.PI * 2;
         const offset = Math.sin(time + index * 0.7) * 10;
         css += '  ' + i + '% { transform: translateX(' + offset + 'px); }\n';
       }
-      
+
       css += '}\n';
     });
-    
+
     // Add line styles with overflow hidden to prevent scrollbar
-    css += '.wobble-line { display: block; white-space: pre; line-height: 1; margin: 0; padding: 0; animation: 2.5s ease-in-out infinite; overflow: hidden; }\n';
+    css += '.wobble-line { display: block; line-height: 1; margin: 0; padding: 0; animation: 2.5s ease-in-out infinite; overflow: hidden; }\n';
     css += '.logo { overflow: hidden; }\n';
-    
+
     // Add specific animations with delays
     lines.forEach((line, index) => {
       const delay = index * 0.05;
       css += '.wobble-line-' + index + ' { animation-name: wobble-line-' + index + '; animation-delay: ' + delay + 's; }\n';
     });
-    
+
     style.textContent = css;
     document.head.appendChild(style);
-    
+
     // Apply to logo
     const wobbledHTML = lines.map((line, index) => {
       const preservedLine = line.replace(/ /g, '&nbsp;');
       return '<span class="wobble-line wobble-line-' + index + '">' + (preservedLine || '&nbsp;') + '</span>';
     }).join('');
-    
+
     logo.innerHTML = wobbledHTML;
     logo.dataset.wobbleApplied = 'true';
   }
-  
+
   // Remove logo wobble
   function removeLogoWobble() {
     const logo = document.querySelector('.logo');
     const style = document.getElementById('logo-wobble-style');
-    
+
     if (logo && logo.dataset.originalContent) {
       logo.innerHTML = logo.dataset.originalContent;
       delete logo.dataset.wobbleApplied;
     }
-    
+
     if (style) {
       style.remove();
     }
   }
-  
+
   // Initialize WebGL
   function initWebGL() {
     // Create canvas
@@ -724,7 +724,7 @@
       z-index: -1;
       pointer-events: none;
     `;
-    
+
     // Get WebGL context with optimal settings
     gl = canvas.getContext('webgl', {
       alpha: true,
@@ -735,176 +735,176 @@
       stencil: false,
       powerPreference: 'high-performance'
     });
-    
+
     if (!gl) {
       console.error('WebGL not supported');
       return false;
     }
-    
+
     // Create shaders
     const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
     const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
-    
+
     if (!vertexShader || !fragmentShader) {
       return false;
     }
-    
+
     // Create program
     program = gl.createProgram();
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
-    
+
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
       console.error('Program link failed:', gl.getProgramInfoLog(program));
       return false;
     }
-    
+
     // Create buffer for particle indices
     const indexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, particleIndices, gl.STATIC_DRAW);
-    
+
     // Set up attribute
     const indexLocation = gl.getAttribLocation(program, 'a_index');
     gl.enableVertexAttribArray(indexLocation);
     gl.vertexAttribPointer(indexLocation, 1, gl.FLOAT, false, 0, 0);
-    
+
     // Use program
     gl.useProgram(program);
-    
+
     // Set up viewport
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
-    
+
     return true;
   }
-  
+
   function createShader(type, source) {
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
-    
+
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
       console.error('Shader compile failed:', gl.getShaderInfoLog(shader));
       gl.deleteShader(shader);
       return null;
     }
-    
+
     return shader;
   }
-  
+
   function resizeCanvas() {
     if (!canvas) return;
-    
+
     const width = window.innerWidth;
     const height = window.innerHeight;
-    
+
     if (canvas.width !== width || canvas.height !== height) {
       canvas.width = width;
       canvas.height = height;
-      
+
       if (gl) {
         gl.viewport(0, 0, width, height);
       }
     }
   }
-  
+
   // Animation loop
   function animate() {
     if (!isRunning || !gl || !program) return;
-    
+
     const currentTime = (Date.now() - startTime) / 1000;
-    
+
     // Set uniforms
     gl.uniform1f(gl.getUniformLocation(program, 'u_time'), currentTime);
     gl.uniform2f(gl.getUniformLocation(program, 'u_resolution'), canvas.width, canvas.height);
-    
+
     // Fade handling
     const currentFade = parseFloat(canvas.dataset.fade || '0');
     const targetFade = canvas.dataset.targetFade === '0' ? 0 : 1;
     const newFade = currentFade + (targetFade - currentFade) * 0.1;
     canvas.dataset.fade = newFade;
     gl.uniform1f(gl.getUniformLocation(program, 'u_fade'), newFade);
-    
+
     // Clear and draw
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    
+
     // Enable blending
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    
+
     // Draw points
     gl.drawArrays(gl.POINTS, 0, NUM_PARTICLES);
-    
+
     animationFrame = requestAnimationFrame(animate);
   }
-  
+
   // Start demo effect
   function startDemo() {
     if (isRunning) return;
-    
+
     // Only run on whoami page
     if (!window.location.hash.includes('whoami')) return;
-    
+
     // Initialize WebGL if needed
     if (!gl && !initWebGL()) {
       console.error('Failed to initialize WebGL');
       return;
     }
-    
+
     // Add canvas to page
     if (canvas && !canvas.parentNode) {
       document.body.appendChild(canvas);
     }
-    
+
     isRunning = true;
     startTime = Date.now();
     canvas.dataset.targetFade = '1';
-    
+
     // Apply logo wobble
     applyLogoWobble();
-    
+
     // Start animation
     animate();
   }
-  
+
   // Stop demo effect
   function stopDemo() {
     isRunning = false;
-    
+
     if (canvas) {
       canvas.dataset.targetFade = '0';
     }
-    
+
     // Let fade finish before stopping
     setTimeout(() => {
       if (animationFrame) {
         cancelAnimationFrame(animationFrame);
         animationFrame = null;
       }
-      
+
       if (canvas && canvas.parentNode) {
         canvas.parentNode.removeChild(canvas);
       }
-      
+
       // Remove logo wobble
       removeLogoWobble();
-    }, 1000);
+    }, 500);
   }
-  
+
   // Listen for music events
   window.addEventListener('xm-play', startDemo);
   window.addEventListener('xm-pause', stopDemo);
-  
+
   // Check initial state
-  window.addEventListener('load', function() {
+  window.addEventListener('load', function () {
     if (window.xmPlayer && window.xmPlayer.isPlaying && window.xmPlayer.isPlaying()) {
       startDemo();
     }
   });
-  
+
   // Export for external control
   window.demoEffect = {
     start: startDemo,
