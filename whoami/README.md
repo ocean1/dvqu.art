@@ -17,7 +17,7 @@ I play(ed) CTFs with **TowerOfHanoi**, **Shellphish**, and **Mhackeroni**, co-or
 - **Embedded & IoT Security**: From ROM hacking on Game Boy to securing industrial control systems
 - **Binary Analysis & Fuzzing**: Novel techniques for vulnerability discovery
 - **Reverse Engineering**: Mobile/Windows malware, anti-malware evasion (CrAVe project)
-- **AI/ML Security**: Exploring LLM assistant personas "transfer protocols", and neural network approaches for image generation.
+- **AI/ML Security**: Exploring LLM assistant personas "transfer protocols", neural network approaches for image generation, and security research (with ML techniques, and for ML!).
 
 I believe science should be reproducible and accessible, which drives my commitment to open source and education.
 
