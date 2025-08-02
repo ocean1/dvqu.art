@@ -129,7 +129,7 @@ Users experimenting with this approach should be aware they're using undocumente
 This is very much a proof-of-concept that pushes boundaries, not a production-ready system with understood security guarantees. Proceed with appropriate caution and curiosity!
 We're operating in uncharted territory here, we discovered these Claude APIs through debug exploration, not official documentation, and we don't fully understand the security model of Claude's artifact sandbox.
 The direct pass-through of user inputs to Claude creates obvious prompt injection risks - a user could attempt to break out of the roleplay context, extract system prompts, or potentially access other unexpected functionality.
-While we've implemented character-focused meta-prompts, we can't claim that this would mitigate prompt injection, or instead introduce interesting manipulation opportunities. 😉 
+While we've implemented character-focused meta-prompts, we can't claim that this would mitigate jailbreaking/prompt injection, or instead introduce interesting manipulation opportunities. 😉 
 The sandbox isolation between the artifacts and the browser environment (and the main Claude conversation or other functionality such as connectors)  remains a black box that we'll likely explore more in the future.
 
 ## 📝 Conclusion
